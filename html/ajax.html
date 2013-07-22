@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI Draggable - Default functionality</title>
+
+	<script src="http://code.jquery.com/jquery-1.7.2.js"></script>
+
+<script>
+
+$(document).ready(function() {
+    
+	//timeout(15000);
+	loadmsg();
+	$('.result').html("documentOK"); 
+});
+
+function loadmsg(){
+    $.ajax({
+	  //url: "ajax.html",
+	   cache:false, 
+	  url: "http://qchat.cn:99/getmsg?uid=PeterSZW",
+	  timeout: 8000,
+	  error: function(response) { $('.data').html("ERROR"); window.setTimeout(loadmsg,3000); },
+	  success: function(data) {
+		 
+		$('.data').html(data); 
+		window.setTimeout(loadmsg,500);
+		 
+	  }
+	});
+}
+$(function(){
+
+    var handler = function(){ 
+
+		var currentTime = new Date();
+		var hours = currentTime.getHours();
+		var minutes = currentTime.getMinutes();
+		var seconds = currentTime.getSeconds();
+
+		if (minutes < 10)   minutes = "0" + minutes;
+		if (seconds  < 10)   seconds = "0" + seconds; 
+
+		$('.result').html(hours + ":" + minutes + ":" + seconds);       
+    }
+    var timer = setInterval( handler , 1000);
+    
+    var clear = function(){
+        clearInterval(timer);
+    }
+});
+
+
+
+
+
+
+	</script>
+</head>
+<body>
+<div class="result">HELLO</div><br />
+<div class="data">data</div>
+
+</body>
+</html>
+
+

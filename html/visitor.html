@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI Draggable - Default functionality</title>
+
+	<script src="http://code.jquery.com/jquery-1.7.2.js"></script>
+
+<script>
+
+$(document).ready(function() {
+    
+	 
+	loadmsg();
+	$('.result').html("documentOK"); 
+});
+
+function addmessage(data) {
+			$('#nav').prepend("<li>"+data+"</li>");
+			  if ($("#nav li").length>10) {
+				  $('#nav').each(function(){
+						$(this).find('li:last').remove();
+					})
+			  }
+}
+function call() {
+    $.ajax({
+	  
+	   cache:false, 
+	  url: "http://qchat.cn:99/call?tuid=PeterSZW",
+	  timeout: 8000,
+	  error: function(response) { addmessage("Call Fail"); },
+	  success: function(data) { addmessage(data);   }
+	});
+}
+function say() {
+//alert($('.cid').html());
+//alert($('#msg').attr("value"));
+    $.ajax({
+	  
+	  cache:false, 
+	  url: "http://qchat.cn:99/sayroom?cid="+$('.cid').html()+"&msg="+$('#msg').attr("value"),
+	  timeout: 8000,
+	  error: function(response) { addmessage("say Fail"); },
+	  success: function(data) { addmessage(data);}
+	});
+	$('#msg').attr("value") ="";
+}
+function loadmsg(){
+    $.ajax({
+	  
+	   cache:false, 
+	  url: "http://qchat.cn:99/getmsg",
+	  timeout: 8000,
+	  error: function(response) { addmessage("ERROR"); window.setTimeout(loadmsg,3000); },
+	  success: function(data) {
+		  obj = JSON.parse(data);
+
+        if (obj.IRet==1){
+		 
+		   if (obj.Cmd !="getmsg") { 
+		      addmessage(data);
+			  
+			  if (obj.Cmd=="acceptcall") {
+				 $('.cid').html(obj.Cid);     
+			  }
+			  if (obj.Cmd=="sayroom") {
+				 addmessage(nowstr()+" "+obj.Msg);   
+			  }
+			  
+		   }
+			
+		} else { 
+		    
+		}		
+		window.setTimeout(loadmsg,500);
+		 
+	  }
+	});
+}
+
+function nowstr() {
+	var currentTime = new Date();
+	var hours = currentTime.getHours();
+	var minutes = currentTime.getMinutes();
+	var seconds = currentTime.getSeconds();
+
+	if (minutes < 10)   minutes = "0" + minutes;
+	if (seconds  < 10)   seconds = "0" + seconds; 
+	return hours + ":" + minutes + ":" + seconds;
+}
+$(function(){
+
+    var handler = function(){ 
+
+	 
+		$('.result').html(nowstr());       
+    }
+    var timer = setInterval( handler , 1000);
+    
+    var clear = function(){
+        clearInterval(timer);
+    }
+});
+
+
+
+
+
+
+	</script>
+</head>
+<body>
+
+<div class="result">HELLO</div><div class="cid">cid</div><br />
+
+<input id="msg" type="text" value="Hello"/>
+<input type="button" value="call" id="call"/>
+<input type="button" value="say" id="say"/>
+
+<input type="button" value="num" id="num"/>
+ <input type="button" value="del" id="del"/>
+  <input type="button" value="add" id="add"/>
+<ul id="nav">
+
+
+</ul>
+ 
+  
+
+
+ 
+
+<script>
+
+$(function(){
+            $('#del').click(function(){
+                 $('ul').each(function(){
+                    $(this).find('li:last').remove();
+                })
+            });
+			 $('#num').click(function(){
+                  alert($("#nav li").length);
+            });
+			$('#call').click(function(){
+                  call();
+            });
+			 $('#say').click(function(){
+                  say();
+            });
+			$('#add').click(function(){
+			  $('#nav').prepend("<li>ss</li>");
+			  if ($("#nav li").length>10) {
+				  $('ul').each(function(){
+						$(this).find('li:last').remove();
+					})
+			  }
+			    
+			  //$('#nav').append("<li>haha</li>");
+			});
+})
+
+</script>
+
+
+
+
+
+</body>
+</html>
+
+

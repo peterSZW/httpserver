@@ -1,0 +1,19 @@
+{
+
+"Listen" : ":99" ,
+   "ids": 
+	[
+		{
+		"id": "Wilson",
+		"password": "abcd"
+		},
+	{
+		"id": "Peter",
+		"password": "abcd"
+		},
+		{
+		"id": "Anni",
+		"password": "1234"
+		}										   
+	]
+}
